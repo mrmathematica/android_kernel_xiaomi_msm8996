@@ -453,8 +453,6 @@ static inline int write_all_xattrs(struct inode *inode, __u32 hsize,
 	if (inline_size) {
 		if (ipage) {
 			inline_addr = inline_xattr_addr(ipage);
-			f2fs_wait_on_page_writeback(ipage, NODE, true);
-			set_page_dirty(ipage);
 		} else {
 			in_page = get_node_page(sbi, inode->i_ino);
 			if (IS_ERR(in_page)) {
@@ -462,7 +460,6 @@ static inline int write_all_xattrs(struct inode *inode, __u32 hsize,
 				return PTR_ERR(in_page);
 			}
 			inline_addr = inline_xattr_addr(in_page);
-			f2fs_wait_on_page_writeback(page, NODE, true);
 		}
 
 		f2fs_wait_on_page_writeback(ipage ? ipage : in_page,
